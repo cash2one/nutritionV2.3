@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jumper.weight.nutrition.user.mapper.HospitalUserInfoMapper">
+	<resultMap id="BaseResultMap" type="com.jumper.weight.nutrition.user.entity.HospitalUserInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="outpatient_num" property="outpatientNum" jdbcType="VARCHAR" />
+		<result column="pregnant_type" property="pregnantType" jdbcType="INTEGER" />
+		<result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="weight_status" property="weightStatus" jdbcType="INTEGER" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="height" property="height" jdbcType="INTEGER" />
+		<result column="weight" property="weight" jdbcType="DOUBLE" />
+		<result column="expected_date" property="expectedDate" jdbcType="DATE" />
+		<result column="birthday" property="birthday" jdbcType="DATE" />
+		<result column="register_num" property="registerNum" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, hospital_id, user_id, outpatient_num, pregnant_type, add_time, weight_status,
+		mobile, real_name, height, weight, expected_date, birthday, register_num
+	</sql>
+	<select id="findById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from hospital_user_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<insert id="insert" parameterType="com.jumper.weight.nutrition.user.entity.HospitalUserInfo" useGeneratedKeys="true" keyProperty="id">
+		insert into hospital_user_info 
+		(
+			hospital_id, user_id, outpatient_num, pregnant_type, add_time,
+			mobile, real_name, height, weight, expected_date, birthday, register_num
+		)
+		values (
+			#{hospitalId,jdbcType=INTEGER},	#{userId,jdbcType=INTEGER},
+			#{outpatientNum,jdbcType=VARCHAR}, #{pregnantType,jdbcType=INTEGER}, 
+			#{addTime,jdbcType=TIMESTAMP}, #{mobile,jdbcType=VARCHAR},
+			#{realName,jdbcType=VARCHAR}, #{height,jdbcType=INTEGER},
+			#{weight,jdbcType=DOUBLE}, #{expectedDate,jdbcType=DATE}, 
+			#{birthday,jdbcType=DATE}, #{registerNum,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="com.jumper.weight.nutrition.user.entity.HospitalUserInfo">
+		update hospital_user_info
+		<set>
+			<if test="hospitalId != null">
+				hospital_id = #{hospitalId,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="outpatientNum != null">
+				outpatient_num = #{outpatientNum,jdbcType=VARCHAR},
+			</if>
+			<if test="pregnantType != null">
+				pregnant_type = #{pregnantType,jdbcType=INTEGER},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				real_name = #{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="height != null">
+				height = #{height,jdbcType=DOUBLE},
+			</if>
+			<if test="weight != null">
+				weight = #{weight,jdbcType=DOUBLE},
+			</if>
+			<if test="expectedDate != null">
+				expected_date = #{expectedDate,jdbcType=DATE},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday,jdbcType=DATE},
+			</if>
+			<if test="registerNum != null and registerNum != ''">
+				register_num = #{registerNum,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 通过医院id用户id查询医院用户 -->
+	<select id="findHospUserByUIdHospId" resultMap="BaseResultMap">
+		select * from hospital_user_info where user_id = #{userId} and hospital_id = #{hospitalId} limit 1
+	</select>
+	
+	<!-- 通过医院id手机号查询医院用户 -->
+	<select id="findHospUserByMobHosp" resultMap="BaseResultMap">
+		select * from hospital_user_info where mobile = #{mobile} and hospital_id = #{hospitalId} limit 1
+	</select>
+	
+	<!-- 通过医院id用户id集合查询医院用户列表 -->
+	<select id="listHospUserByUIdHospId" resultMap="BaseResultMap">
+		select * from hospital_user_info where hospital_id = #{hospitalId} 
+		and user_id in 
+		<foreach collection="userIds" item="userId" open="(" close=")" separator=",">
+			#{userId}
+		</foreach> 
+	</select>
+	
+	<!-- 查询所有，用作定时器维护体重状态 -->
+	<select id="listAll" resultMap="BaseResultMap">
+		select id, hospital_id, user_id, weight_status, height, weight, expected_date, pregnant_type from hospital_user_info
+	</select>
+	
+	<!-- 通过医院id和用户id删除 -->
+	<delete id="deleteByHospUId">
+		delete from hospital_user_info where hospital_id = #{hospitalId} and user_id = #{userId}
+	</delete>
+	
+	<!-- 批量更新当前体重状态 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="obj" separator=";">
+			update hospital_user_info
+			set weight_status = #{obj.weightStatus,jdbcType=INTEGER}
+			where id = #{obj.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	
+	<!-- 通过登记号查询 -->
+	<select id="findByRegNum" resultMap="BaseResultMap">
+		select * from hospital_user_info where hospital_id = #{hospitalId} and register_num = #{registerNum,jdbcType=VARCHAR} limit 1
+	</select>
+	
+</mapper>

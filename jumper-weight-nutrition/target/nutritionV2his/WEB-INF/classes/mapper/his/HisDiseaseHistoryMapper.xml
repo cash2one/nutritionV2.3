@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jumper.weight.nutrition.his.mapper.HisDiseaseHistoryMapper">
+	<resultMap id="BaseResultMap" type="com.jumper.weight.nutrition.his.entity.HisDiseaseHistory">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="hosp_user_id" property="hospUserId" jdbcType="INTEGER" />
+		<result column="allergy_history" property="allergyHistory"
+			jdbcType="VARCHAR" />
+		<result column="past_history" property="pastHistory" jdbcType="VARCHAR" />
+		<result column="family_history" property="familyHistory"
+			jdbcType="VARCHAR" />
+		<result column="birth_history" property="birthHistory"
+			jdbcType="VARCHAR" />
+		<result column="pregnancy_special_case" property="pregnancySpecialCase"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, hosp_user_id, allergy_history, past_history, family_history,
+		birth_history, pregnancy_special_case
+	</sql>
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from his_disease_history
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 通过hospUserId查询 -->
+	<select id="findByHospUId" parameterType="int" resultMap="BaseResultMap">
+		select id, hosp_user_id
+		from his_disease_history
+		where hosp_user_id = #{hospUserId,jdbcType=INTEGER}
+	</select>
+	
+	<insert id="insert" parameterType="com.jumper.weight.nutrition.his.entity.HisDiseaseHistory">
+		insert into his_disease_history (hosp_user_id, allergy_history,
+		past_history, family_history, birth_history,
+		pregnancy_special_case)
+		values (#{hospUserId,jdbcType=INTEGER},
+		#{allergyHistory,jdbcType=VARCHAR},
+		#{pastHistory,jdbcType=VARCHAR}, #{familyHistory,jdbcType=VARCHAR}, #{birthHistory,jdbcType=VARCHAR},
+		#{pregnancySpecialCase,jdbcType=VARCHAR})
+	</insert>
+	<update id="update" parameterType="com.jumper.weight.nutrition.his.entity.HisDiseaseHistory">
+		update his_disease_history
+		<set>
+			<if test="hospUserId != null">
+				hosp_user_id = #{hospUserId,jdbcType=INTEGER},
+			</if>
+			<if test="allergyHistory != null">
+				allergy_history = #{allergyHistory,jdbcType=VARCHAR},
+			</if>
+			<if test="pastHistory != null">
+				past_history = #{pastHistory,jdbcType=VARCHAR},
+			</if>
+			<if test="familyHistory != null">
+				family_history = #{familyHistory,jdbcType=VARCHAR},
+			</if>
+			<if test="birthHistory != null">
+				birth_history = #{birthHistory,jdbcType=VARCHAR},
+			</if>
+			<if test="pregnancySpecialCase != null">
+				pregnancy_special_case = #{pregnancySpecialCase,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

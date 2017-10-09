@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jumper.weight.nutrition.his.mapper.HisInspectionRecordMapper">
+	<resultMap id="BaseResultMap" type="com.jumper.weight.nutrition.his.entity.HisInspectionRecord">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="hosp_user_id" property="hospUserId" jdbcType="INTEGER" />
+		<result column="general_inspection" property="generalInspection"
+			jdbcType="VARCHAR" />
+		<result column="pelvis_inspection" property="pelvisInspection"
+			jdbcType="VARCHAR" />
+		<result column="gynecology_inspection" property="gynecologyInspection" jdbcType="INTEGER" />
+		<result column="vulua" property="vulua" jdbcType="INTEGER" />
+		<result column="vagina" property="vagina" jdbcType="INTEGER" />
+		<result column="cervix" property="cervix" jdbcType="INTEGER" />
+		<result column="uterine_body" property="uterineBody" jdbcType="INTEGER" />
+		<result column="uterine_day" property="uterineDay" jdbcType="INTEGER" />
+		<result column="uterine_accessory" property="uterineAccessory"
+			jdbcType="INTEGER" />
+		<result column="blood_type" property="bloodType" jdbcType="VARCHAR" />
+		<result column="hbvm" property="hbvm" jdbcType="VARCHAR" />
+		<result column="hcv" property="hcv" jdbcType="VARCHAR" />
+		<result column="syphilis" property="syphilis" jdbcType="VARCHAR" />
+		<result column="hiv" property="hiv" jdbcType="VARCHAR" />
+		<result column="gbs" property="gbs" jdbcType="VARCHAR" />
+		<result column="ogtt" property="ogtt" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, hosp_user_id, general_inspection, pelvis_inspection,
+		gynecology_inspection, vulua,
+		vagina, cervix, uterine_body, uterine_day, uterine_accessory, blood_type,
+		hbvm, hcv,
+		syphilis, hiv, gbs, ogtt
+	</sql>
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from his_inspection_record
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 通过hospUserId查询 -->
+	<select id="findByHospUId" parameterType="int" resultMap="BaseResultMap">
+		select id, hosp_user_id
+		from his_inspection_record
+		where hosp_user_id = #{hospUserId,jdbcType=INTEGER}
+	</select>
+	
+	<insert id="insert" parameterType="com.jumper.weight.nutrition.his.entity.HisInspectionRecord">
+		insert into his_inspection_record (hosp_user_id,
+		general_inspection,
+		pelvis_inspection, gynecology_inspection,
+		vulua, vagina, cervix,
+		uterine_body, uterine_day, uterine_accessory,
+		blood_type, hbvm, hcv,
+		syphilis, hiv, gbs,
+		ogtt)
+		values (#{hospUserId,jdbcType=INTEGER},
+		#{generalInspection,jdbcType=VARCHAR},
+		#{pelvisInspection,jdbcType=VARCHAR},
+		#{gynecologyInspection,jdbcType=INTEGER},
+		#{vulua,jdbcType=INTEGER}, #{vagina,jdbcType=INTEGER}, #{cervix,jdbcType=INTEGER},
+		#{uterineBody,jdbcType=INTEGER}, #{uterineDay,jdbcType=INTEGER},
+		#{uterineAccessory,jdbcType=INTEGER},
+		#{bloodType,jdbcType=VARCHAR}, #{hbvm,jdbcType=VARCHAR}, #{hcv,jdbcType=VARCHAR},
+		#{syphilis,jdbcType=VARCHAR}, #{hiv,jdbcType=VARCHAR},
+		#{gbs,jdbcType=VARCHAR},
+		#{ogtt,jdbcType=VARCHAR})
+	</insert>
+	<update id="update" parameterType="com.jumper.weight.nutrition.his.entity.HisInspectionRecord">
+		update his_inspection_record
+		<set>
+			<if test="hospUserId != null">
+				hosp_user_id = #{hospUserId,jdbcType=INTEGER},
+			</if>
+			<if test="generalInspection != null">
+				general_inspection = #{generalInspection,jdbcType=VARCHAR},
+			</if>
+			<if test="pelvisInspection != null">
+				pelvis_inspection = #{pelvisInspection,jdbcType=VARCHAR},
+			</if>
+			<if test="gynecologyInspection != null">
+				gynecology_inspection = #{gynecologyInspection,jdbcType=INTEGER},
+			</if>
+			<if test="vulua != null">
+				vulua = #{vulua,jdbcType=INTEGER},
+			</if>
+			<if test="vagina != null">
+				vagina = #{vagina,jdbcType=INTEGER},
+			</if>
+			<if test="cervix != null">
+				cervix = #{cervix,jdbcType=INTEGER},
+			</if>
+			<if test="uterineBody != null">
+				uterine_body = #{uterineBody,jdbcType=INTEGER},
+			</if>
+			<if test="uterineDay != null">
+				uterine_day = #{uterineDay,jdbcType=INTEGER},
+			</if>
+			<if test="uterineAccessory != null">
+				uterine_accessory = #{uterineAccessory,jdbcType=INTEGER},
+			</if>
+			<if test="bloodType != null">
+				blood_type = #{bloodType,jdbcType=VARCHAR},
+			</if>
+			<if test="hbvm != null">
+				hbvm = #{hbvm,jdbcType=VARCHAR},
+			</if>
+			<if test="hcv != null">
+				hcv = #{hcv,jdbcType=VARCHAR},
+			</if>
+			<if test="syphilis != null">
+				syphilis = #{syphilis,jdbcType=VARCHAR},
+			</if>
+			<if test="hiv != null">
+				hiv = #{hiv,jdbcType=VARCHAR},
+			</if>
+			<if test="gbs != null">
+				gbs = #{gbs,jdbcType=VARCHAR},
+			</if>
+			<if test="ogtt != null">
+				ogtt = #{ogtt,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

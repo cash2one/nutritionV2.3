@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jumper.weight.nutrition.his.mapper.HisWeightRecordMapper">
+	<resultMap id="BaseResultMap" type="com.jumper.weight.nutrition.his.entity.HisWeightRecord">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="hosp_user_id" property="hospUserId" jdbcType="INTEGER" />
+		<result column="add_date" property="addDate" jdbcType="DATE" />
+		<result column="weight" property="weight" jdbcType="DOUBLE" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, hosp_user_id, add_date, weight
+	</sql>
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from his_weight_record
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<insert id="insert" parameterType="com.jumper.weight.nutrition.his.entity.HisWeightRecord">
+		insert into his_weight_record (hosp_user_id, add_date,
+		weight)
+		values (#{hospUserId,jdbcType=INTEGER},
+		#{addDate,jdbcType=DATE},
+		#{weight,jdbcType=DOUBLE})
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jumper.weight.nutrition.his.entity.HisWeightRecord">
+		update his_weight_record
+		<set>
+			<if test="hospUserId != null">
+				hosp_user_id = #{hospUserId,jdbcType=INTEGER},
+			</if>
+			<if test="addDate != null">
+				add_date = #{addDate,jdbcType=DATE},
+			</if>
+			<if test="weight != null">
+				weight = #{weight,jdbcType=DOUBLE},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 批量插入 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into his_weight_record 
+		(
+		hosp_user_id, add_date, weight
+		)
+		values 
+		<foreach collection="list" item="obj" separator=",">
+			(
+			#{obj.hospUserId,jdbcType=INTEGER},	#{obj.addDate,jdbcType=DATE}, #{obj.weight,jdbcType=DOUBLE}
+			)
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="obj" separator=";">
+			update his_weight_record set 
+			hosp_user_id = #{obj.hospUserId,jdbcType=INTEGER}, add_date = #{obj.addDate,jdbcType=DATE}, weight = #{obj.weight,jdbcType=DOUBLE}
+			where id = #{record.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	
+	<!-- 通过hospUserId查询 -->
+	<select id="listHisWeightByHUId" parameterType="int" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from his_weight_record
+		where hosp_user_id = #{hospUserId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取日期范围内的体重列表 -->
+	<select id="listWeightByDuring" resultMap="BaseResultMap">
+		select * from his_weight_record where hosp_user_id = #{hospUserId} 
+		<if test="startDate != null">
+			and DATE_FORMAT(add_date,'%Y-%m-%d') <![CDATA[>=]]> #{startDate}
+		</if>
+		<if test="endDate != null">
+			and DATE_FORMAT(add_date,'%Y-%m-%d') <![CDATA[<=]]> #{endDate}
+		</if>
+		ORDER BY add_date asc
+	</select>
+	
+</mapper>

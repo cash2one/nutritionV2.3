@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jumper.weight.nutrition.his.mapper.HisUserExtraInfoMapper">
+	<resultMap id="BaseResultMap" type="com.jumper.weight.nutrition.his.entity.HisUserExtraInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="hosp_user_id" property="hospUserId" jdbcType="INTEGER" />
+		<result column="health_num" property="healthNum" jdbcType="VARCHAR" />
+		<result column="id_card" property="idCard" jdbcType="VARCHAR" />
+		<result column="initial_survey_date" property="initialSurveyDate"
+			jdbcType="DATE" />
+		<result column="impregnation_way" property="impregnationWay"
+			jdbcType="INTEGER" />
+		<result column="implantation_date" property="implantationDate"
+			jdbcType="DATE" />
+		<result column="pregnant_times" property="pregnantTimes"
+			jdbcType="INTEGER" />
+		<result column="birth_times" property="birthTimes" jdbcType="INTEGER" />
+		<result column="pregnant_week" property="pregnantWeek"
+			jdbcType="INTEGER" />
+		<result column="correct_pregnant_week" property="correctPregnantWeek"
+			jdbcType="INTEGER" />
+		<result column="correct_expected_date" property="correctExpectedDate"
+			jdbcType="DATE" />
+		<result column="menarche_age" property="menarcheAge" jdbcType="INTEGER" />
+		<result column="period_cycle" property="periodCycle" jdbcType="VARCHAR" />
+		<result column="period_amount" property="periodAmount"
+			jdbcType="INTEGER" />
+		<result column="dysmenorrhea" property="dysmenorrhea" jdbcType="INTEGER" />
+		<result column="marry_age" property="marryAge" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, hosp_user_id, health_num, id_card, initial_survey_date,
+		impregnation_way, implantation_date,
+		pregnant_times, birth_times, pregnant_week, correct_pregnant_week,
+		correct_expected_date,
+		menarche_age, period_cycle, period_amount, dysmenorrhea, marry_age
+	</sql>
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from his_user_extra_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 通过hospUserId查询 -->
+	<select id="findByHospUId" parameterType="int" resultMap="BaseResultMap">
+		select id, hosp_user_id
+		from his_user_extra_info
+		where hosp_user_id = #{hospUserId,jdbcType=INTEGER}
+	</select>
+	
+	<insert id="insert" parameterType="com.jumper.weight.nutrition.his.entity.HisUserExtraInfo">
+		insert into his_user_extra_info (hosp_user_id, health_num,
+		id_card, initial_survey_date, impregnation_way,
+		implantation_date, pregnant_times, birth_times,
+		pregnant_week, correct_pregnant_week, correct_expected_date,
+		menarche_age, period_cycle, period_amount,
+		dysmenorrhea, marry_age)
+		values (#{hospUserId,jdbcType=INTEGER},
+		#{healthNum,jdbcType=VARCHAR},
+		#{idCard,jdbcType=VARCHAR}, #{initialSurveyDate,jdbcType=DATE},
+		#{impregnationWay,jdbcType=INTEGER},
+		#{implantationDate,jdbcType=DATE}, #{pregnantTimes,jdbcType=INTEGER},
+		#{birthTimes,jdbcType=INTEGER},
+		#{pregnantWeek,jdbcType=INTEGER}, #{correctPregnantWeek,jdbcType=INTEGER},
+		#{correctExpectedDate,jdbcType=DATE},
+		#{menarcheAge,jdbcType=INTEGER}, #{periodCycle,jdbcType=VARCHAR}, #{periodAmount,jdbcType=INTEGER},
+		#{dysmenorrhea,jdbcType=INTEGER}, #{marryAge,jdbcType=VARCHAR})
+	</insert>
+	<update id="update" parameterType="com.jumper.weight.nutrition.his.entity.HisUserExtraInfo">
+		update his_user_extra_info
+		<set>
+			<if test="hospUserId != null">
+				hosp_user_id = #{hospUserId,jdbcType=INTEGER},
+			</if>
+			<if test="healthNum != null">
+				health_num = #{healthNum,jdbcType=VARCHAR},
+			</if>
+			<if test="idCard != null">
+				id_card = #{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="initialSurveyDate != null">
+				initial_survey_date = #{initialSurveyDate,jdbcType=DATE},
+			</if>
+			<if test="impregnationWay != null">
+				impregnation_way = #{impregnationWay,jdbcType=INTEGER},
+			</if>
+			<if test="implantationDate != null">
+				implantation_date = #{implantationDate,jdbcType=DATE},
+			</if>
+			<if test="pregnantTimes != null">
+				pregnant_times = #{pregnantTimes,jdbcType=INTEGER},
+			</if>
+			<if test="birthTimes != null">
+				birth_times = #{birthTimes,jdbcType=INTEGER},
+			</if>
+			<if test="pregnantWeek != null">
+				pregnant_week = #{pregnantWeek,jdbcType=INTEGER},
+			</if>
+			<if test="correctPregnantWeek != null">
+				correct_pregnant_week = #{correctPregnantWeek,jdbcType=INTEGER},
+			</if>
+			<if test="correctExpectedDate != null">
+				correct_expected_date = #{correctExpectedDate,jdbcType=DATE},
+			</if>
+			<if test="menarcheAge != null">
+				menarche_age = #{menarcheAge,jdbcType=INTEGER},
+			</if>
+			<if test="periodCycle != null">
+				period_cycle = #{periodCycle,jdbcType=VARCHAR},
+			</if>
+			<if test="periodAmount != null">
+				period_amount = #{periodAmount,jdbcType=INTEGER},
+			</if>
+			<if test="dysmenorrhea != null">
+				dysmenorrhea = #{dysmenorrhea,jdbcType=INTEGER},
+			</if>
+			<if test="marryAge != null">
+				marry_age = #{marryAge,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

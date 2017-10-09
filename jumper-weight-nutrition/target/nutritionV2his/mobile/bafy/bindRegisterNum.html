@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--css文件加载顺序不能动-->
+    <link href="css/mui.min.css" rel="stylesheet">
+    <link href="css/css.css" rel="stylesheet">
+    <link href="css/reset.css" rel="stylesheet">
+    <link href="css/muiReset.css" rel="stylesheet">
+    <title>体重营养管理</title>
+    <style>
+
+        .mui-btn{
+          	margin-top:60px;
+          	margin-left:10%;
+            width:80%;
+            
+        }
+
+       .pText,.pText2{
+           font-size: 12px;
+           width: 84%;
+           margin: 10px 0 0 8%;
+           line-height: 24px;
+       }
+        .pText2{
+            position: absolute;
+            bottom: 4%;
+            text-align: center;
+        }
+		.h4Title {
+		    font-size:16px;
+		    margin: 20px 8% -10px;
+    		font-weight: normal;
+    		color: #bbbbbb;
+    		text-align: center;
+		}
+		.realNameDD{
+			overflow : hidden; 
+			text-overflow : ellipsis; 
+			white-space : nowrap;
+		}
+		.idCard dd span:nth-child(1){
+			width:30%;
+			margin-right: 10%;
+		}
+		.idCard dd span:nth-child(2){
+			width:58%;
+			float: right;
+		}
+		.idCard dd{
+		    line-height:32px;
+			overflow: hidden;
+		}
+		.idBox{
+			height: inherit;
+			overflow: hidden;
+		}
+		.idCard dt{
+			margin: 0;
+		}
+		.mui-input-row{
+		    margin-top:2px;
+		}
+		.mui-input-row.cc-row label{
+			padding: 0;
+			padding-left:18px;
+		}
+		.mui-input-row label ~ input{
+			padding: 0;
+		}
+		input.xm,input.djh{
+		    border-radius: 0;
+			width:80%;
+			margin:40px 0 0 10%;
+			padding-left:40px;
+			border:none;
+			border-bottom:#ccc solid 1px;
+		}
+	  	.in-icon{
+	  	    width: 25px;
+    		position: absolute;
+    		top: 48px;
+    		left: 40px;
+	  	} 
+    </style>
+</head>
+<body style="background:white;">
+	<div class="mui-input-row cc-row">
+      <!--  <label>姓名</label> -->
+         <img src="../images/user.png" class="in-icon"/>
+         <input id="realName" class="xm"
+                    oninput="if(value.length>6)value=value.slice(0,6)"
+                    onkeyup="value=value.replace(/[\d]/g,'')"
+                    onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[\d]/g,''))"
+                    type="text"
+                    class="mui-input-clear"
+                    maxlength=6
+                    name="realName"
+                    placeholder="请输入姓名"/>
+    </div>
+    <div class="mui-input-row cc-row" style="margin-top:-14px;">
+       <!--   <label>登记号</label> -->
+         <img src="../images/yanz.png" class="in-icon"/>
+         <input id="registerNum" class="djh"
+					oninput="this.value=this.value.replace(/[\W_]/ig,'');if(value.length>30)value=value.slice(0,30);" 
+                    onafterpaste="this.value=this.value.replace(/[\W_]/ig,'');if(value.length>30)value=value.slice(0,30);"
+                    type="text"
+                    name="registerNum"
+                    runat="server"
+                    class="mui-input-clear"
+                    placeholder="请输入登记号"/>
+    </div>
+    <button type="button" class="mui-btn mui-btn-danger mui-btn-block checkInfo" id="bindRegisterNum">绑定</button>
+</body>
+<!-- iOS不支持import -->
+<!-- <link rel="import" href="foot.html"> -->
+<script src="js/mui.min.js"></script>
+<script src="js/mui.picker.min.js"></script>
+<script src="js/mui.poppicker.js"></script>
+<script src="../../sfile/js/jquery-1.10.1.min.js"></script>
+<script src="../../sfile/js/jquery.cookie.js"></script>
+<script src="../../sfile/js/common.js"></script>
+<script src="js/ajax/bindRegisterNum.js"></script>
+</html>

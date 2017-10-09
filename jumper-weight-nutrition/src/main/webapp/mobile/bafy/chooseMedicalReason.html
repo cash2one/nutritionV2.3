@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--css文件加载顺序不能动-->
+    <link href="css/mui.min.css" rel="stylesheet">
+    <link href="css/mui.picker.min.css" rel="stylesheet">
+    <link href="css/css.css" rel="stylesheet">
+    <link href="css/reset.css" rel="stylesheet">
+    <link href="css/muiReset.css" rel="stylesheet">
+    <title>体重营养管理</title>
+    <style>
+
+        .mui-btn-block.checkInfo{
+            position: absolute;
+            bottom:0;
+            width: 100%;
+            margin-bottom: 0;
+            border-radius:0;
+        }
+
+       .pText,.pText2{
+           font-size: 12px;
+           width: 84%;
+           margin: 10px 0 0 8%;
+           line-height: 24px;
+       }
+        .pText2{
+            position: absolute;
+            bottom: 4%;
+            text-align: center;
+        }
+		.h4Title {
+		    font-size:16px;
+		    margin: 20px 8% -10px;
+    		font-weight: normal;
+    		color: #bbbbbb;
+    		text-align: center;
+		}
+		.realNameDD{
+			overflow : hidden; 
+			text-overflow : ellipsis; 
+			white-space : nowrap;
+		}
+		.idCard dd span:nth-child(1){
+			width:30%;
+			margin-right: 10%;
+		}
+		.idCard dd span:nth-child(2){
+			width:58%;
+			float: right;
+		}
+		.idCard dd{
+		    line-height:32px;
+			overflow: hidden;
+		}
+		.idBox{
+			height: inherit;
+			overflow: hidden;
+		}
+		.idCard dt{
+			margin: 0;
+		}
+		.mui-input-row{
+		    margin-top:30px;
+			background:white;
+		}
+		.mui-input-row.cc-row label{
+			padding: 0;
+			padding-left:18px;
+		}
+    </style>
+</head>
+<body style="background: #fafafa;">
+	<h4 class="h4Title" >—— 请确认就诊信息—— </h4>
+    <div class="idBox deg135">
+        <dl class="idCard">
+            <dt class="hospitalName" style="margin-bottom:10px;"></dt>
+            <dd class="realNameDD"><span>就诊人</span><span class="realName"></span></dd>
+            <dd><span>手机</span><span class="mobile"></span></dd>
+            <dd><span>登记号</span><span class="registerNum"></span></dd>
+            <!-- <dd><span>就诊医院</span><span style="line-height:20px;margin-top: 6px;" class="hospitalName">深圳市宝安区妇幼保健院</span></dd> -->
+            <dd><span>门诊科室</span><span>营养门诊</span></dd>
+        </dl>
+        <p class="bgText">就诊卡</p>
+    </div>
+	<div class="mui-input-row">
+         <label>就诊原因</label>
+         <div id='reason' class="btnc ResultBox3 careCause" value="" ></div>
+    </div>
+    <button type="button" class="mui-btn mui-btn-danger mui-btn-block checkInfo">完成</button>
+</body>
+<!-- iOS不支持import -->
+<!-- <link rel="import" href="foot.html"> -->
+<script src="js/mui.min.js"></script>
+<script src="js/mui.picker.min.js"></script>
+<script src="js/mui.poppicker.js"></script>
+<script src="js/rem.js"></script>
+<script src="../../sfile/js/jquery-1.10.1.min.js"></script>
+<script src="../../sfile/js/jquery.cookie.js"></script>
+<script src="../../sfile/js/common.js"></script>
+<script src="js/ajax/chooseMedicalReason.js"></script>
+<script>
+setTimeout(function(){//延迟加载获取type初复诊状态
+	(function($, doc) {
+		$.init();
+		$.ready(function() {
+			var userPicker = new $.PopPicker();
+			var reasonData = new Array();
+			//var type = $(".checkInfo").attr("outpType");
+			var outpType = doc.getElementsByClassName("checkInfo")[0].getAttribute("outpType");
+			var type = 0;
+			if(outpType == 0){
+				type = 0;//初诊
+			}else if(outpType == 2){
+				type = 1;//复诊
+			}
+			$.ajax({
+				url:basePath+"/settings/findHospitalOutpatientReason",
+				type:"post",
+				dataType:"json",
+				data:{hospitalId:hospitalId, type:type},
+				async:false,
+				success:function(json){
+					if(json.msg == 1){
+						var data = json.data;
+						for (var i = 0; i < data.length; i++) {
+							var reasons = {
+								value:data[i].id,
+								text:data[i].outpatientReason,
+								isSkipDiet:data[i].isSkipDiet,
+								isSkipSport:data[i].isSkipSport
+							};
+							reasonData.push(reasons);
+						}
+					}
+				}
+			});
+			userPicker.setData(reasonData);
+			var showUserPickerButton = doc.getElementById('reason');
+			var userResult = doc.getElementsByClassName('ResultBox3')[0];
+			showUserPickerButton.addEventListener('tap', function(event) {
+				userPicker.show(function(items) {
+					userResult.innerText = items[0].text;
+					showUserPickerButton.setAttribute("value", items[0].value);
+					if(type == 0){
+						showUserPickerButton.setAttribute("isSkipDiet", items[0].isSkipDiet);
+						showUserPickerButton.setAttribute("isSkipSport", items[0].isSkipSport);
+						var isSkipDiet = items[0].isSkipDiet;
+						var isSkipSport = items[0].isSkipSport;
+						if (isSkipDiet && isSkipSport) {
+							doc.getElementsByClassName("checkInfo")[0].innerText = "完成";
+						} else {
+							doc.getElementsByClassName("checkInfo")[0].innerText = "下一步";
+						}
+					}else if(type == 1){
+						doc.getElementsByClassName("checkInfo")[0].innerText = "完成";
+					}
+					
+				});
+			}, false);
+			//-----------------------------------------
+			
+		});
+	})(mui, document);
+},200);
+//页面延时显示
+setTimeout(function(){document.body.style.display="block";},10);
+</script>
+</html>
